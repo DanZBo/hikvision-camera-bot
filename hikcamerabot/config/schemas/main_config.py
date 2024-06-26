@@ -176,6 +176,10 @@ class CameraListConfig(Schema):
         unknown = INCLUDE
         ordered = True
 
+class Custom_url(Schema):
+    url = f.Str(required=True, validate=non_empty_str)
+    WA_chat_name = f.Str(required=True, validate=non_empty_str)
+    enable = f.Boolean(required=True)
 
 class Telegram(Schema):
     api_id = f.Int(required=True, validate=int_min_1)
@@ -189,7 +193,8 @@ class Telegram(Schema):
 
 class MainConfig(Schema):
     _APP_LOG_LEVELS = {'DEBUG', 'WARNING', 'INFO', 'ERROR', 'CRITICAL'}
-
+    
+    custom_url = f.Nested(Custom_url())
     telegram = f.Nested(Telegram(), required=True)
     log_level = f.Str(required=True, validate=v.OneOf(_APP_LOG_LEVELS))
     camera_list = f.Nested(CameraListConfig(), required=True)
