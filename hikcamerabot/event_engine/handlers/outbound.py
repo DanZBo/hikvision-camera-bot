@@ -7,6 +7,7 @@ import requests
 from io import BytesIO, StringIO
 from typing import TYPE_CHECKING
 from hikcamerabot.config.config import get_main_config
+import base64
 
 from emoji import emojize
 from pyrogram.enums import ChatAction
@@ -78,12 +79,16 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
 
     async def _send_video_to_custom_url(self, file_, caption):
         try:
+            video_bytes = base64.b64decode(file_)
+
+            video_buffer = BytesIO(video_bytes)
+            
             form_data = {
             'text': (None, caption, 'text/plain'),
             'chat_name': (None, conf.custom_url.WA_chat_name, 'text/plain'),
-            'file': ('file',file_,'video/mp4')
+            'file': ('file',video_buffer,'video/mp4')
             }
-            print(file_)
+            print(video_buffer)
             response = requests.post(conf.custom_url.url, files=form_data)
             self._log.debug('Debug context message: %s', response)
 
