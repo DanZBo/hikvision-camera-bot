@@ -88,7 +88,7 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
             'chat_name': (None, conf.custom_url.WA_chat_name, 'text/plain'),
             'file': ('file',file_,'video/mp4')
             }
-         #   print(video_buffer)
+            print(file)
             response = requests.post(conf.custom_url.url, files=form_data)
             self._log.debug('Debug context message: %s', response)
 
@@ -107,7 +107,7 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
                 chat_id=uid, action=ChatAction.UPLOAD_VIDEO
             )
             if conf.custom_url.enable:
-                await self._send_video_to_custom_url(file_=file_,caption=caption)
+                await self._send_video_to_custom_url(file_=event.video_path,caption=caption)
 
             message = await self._bot.send_video(
                 chat_id=uid,
