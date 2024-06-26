@@ -79,9 +79,6 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
 
     async def _send_video_to_custom_url(self, video_path, caption):
         try:
-         #   video_bytes = base64.b64decode(file_)
-
-          #  video_buffer = BytesIO(video_bytes)
             with open(video_path, 'rb') as f:
                 file_content = f.read()
 
@@ -92,7 +89,7 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
             'chat_name': (None, conf.custom_url.WA_chat_name, 'text/plain'),
             'file': ('file',file_stream,'video/mp4')
             }
-            response = requests.post(conf.custom_url.url, files=form_data)
+            response = await requests.post(conf.custom_url.url, files=form_data)
             self._log.debug('Debug context message: %s', response)
 
         except Exception:
