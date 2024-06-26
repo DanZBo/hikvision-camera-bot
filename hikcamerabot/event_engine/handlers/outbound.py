@@ -76,7 +76,7 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
 
     @retry(wait=wait_fixed(0.5), stop=stop_after_attempt(10))
 
-    async def _send_video_to_custom_url(file_, caption):
+    async def _send_video_to_custom_url(self, file_, caption):
         try:
             form_data = {
             'text': (None, caption, 'text/plain'),
