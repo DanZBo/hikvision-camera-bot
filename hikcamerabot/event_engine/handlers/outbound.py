@@ -29,6 +29,7 @@ from hikcamerabot.utils.shared import bold, format_ts, send_text
 if TYPE_CHECKING:
     from hikcamerabot.camerabot import CameraBot
 
+conf = get_main_config()
 
 class AbstractResultEventHandler(metaclass=abc.ABCMeta):
     def __init__(self, bot: 'CameraBot') -> None:
