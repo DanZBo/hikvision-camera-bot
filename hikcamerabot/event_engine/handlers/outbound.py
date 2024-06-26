@@ -124,9 +124,9 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
             self._log.debug('Debug context message: %s', message)
             if message and message.video and not is_cached:
                 self._video_file_cache[event.video_path] = message.video.file_id
-                
+
             if conf.custom_url.enable:
-                await self._send_video_to_custom_url(file_=event.video_path,caption=caption)    
+                await self._send_video_to_custom_url(video_path=event.video_path,caption=caption)    
         
         except Exception:
             self._log.exception(
