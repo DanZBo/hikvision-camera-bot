@@ -3,8 +3,10 @@
 import abc
 import logging
 import os
+import requests
 from io import BytesIO
 from typing import TYPE_CHECKING
+from hikcamerabot.config.config import get_main_config
 
 from emoji import emojize
 from pyrogram.enums import ChatAction
@@ -72,6 +74,23 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
                 os.remove(event.thumb_path)
 
     @retry(wait=wait_fixed(0.5), stop=stop_after_attempt(10))
+
+    async def _send_video_to_custom_url(file_, caption):
+        try:
+            form_data = {
+            'text': (None, caption, 'text/plain'),
+            'chat_name': (None, conf.custom_url.WA_chat_name, 'text/plain')
+            }
+            form_data['file'] = ('file', file, 'video/mp4')
+            response = requests.post(conf.custom_url.url, files=form_data)
+            self._log.debug('Debug context message: %s', response)
+
+        except Exception:
+            self._log.exception(
+                'Failed to send video in %s. Retrying', self.__class__.__name__
+            )
+            raise
+
     async def _send_video(
         self, uid: int, event: VideoOutboundEvent, caption: str
     ) -> None:
@@ -93,6 +112,9 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
             self._log.debug('Debug context message: %s', message)
             if message and message.video and not is_cached:
                 self._video_file_cache[event.video_path] = message.video.file_id
+            if conf.custom_url.enable:
+                await self._send_video_to_custom_url(file_=file_,caption=caption)
+
         except Exception:
             self._log.exception(
                 'Failed to send video in %s. Retrying', self.__class__.__name__

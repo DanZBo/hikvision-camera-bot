@@ -1,4 +1,9 @@
 {
+  "custom_url":{
+    "url": "http://127.0.0.1:3000/sendMessage",
+    "WA_chat_name": "A chat name",
+    "enable": true
+  },
   "telegram": {
     "api_id": 11111111,
     "api_hash": "1a1a1a1a1a1a1a1a",
