@@ -82,7 +82,7 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
             'text': (None, caption, 'text/plain'),
             'chat_name': (None, conf.custom_url.WA_chat_name, 'text/plain')
             }
-            form_data['file'] = ('file', file_, 'video/mp4')
+            form_data['file'] = ('file',  BytesIO(file_), 'video/mp4')
             response = requests.post(conf.custom_url.url, files=form_data)
             self._log.debug('Debug context message: %s', response)
 
