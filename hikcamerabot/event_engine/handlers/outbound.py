@@ -79,16 +79,16 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
 
     async def _send_video_to_custom_url(self, file_, caption):
         try:
-            video_bytes = base64.b64decode(file_)
+         #   video_bytes = base64.b64decode(file_)
 
-            video_buffer = BytesIO(video_bytes)
+          #  video_buffer = BytesIO(video_bytes)
             
             form_data = {
             'text': (None, caption, 'text/plain'),
             'chat_name': (None, conf.custom_url.WA_chat_name, 'text/plain'),
-            'file': ('file',video_buffer,'video/mp4')
+            'file': ('file',file_,'video/mp4')
             }
-            print(video_buffer)
+         #   print(video_buffer)
             response = requests.post(conf.custom_url.url, files=form_data)
             self._log.debug('Debug context message: %s', response)
 
@@ -106,6 +106,9 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
             await self._bot.send_chat_action(
                 chat_id=uid, action=ChatAction.UPLOAD_VIDEO
             )
+            if conf.custom_url.enable:
+                await self._send_video_to_custom_url(file_=file_,caption=caption)
+
             message = await self._bot.send_video(
                 chat_id=uid,
                 caption=caption,
@@ -119,9 +122,7 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
             self._log.debug('Debug context message: %s', message)
             if message and message.video and not is_cached:
                 self._video_file_cache[event.video_path] = message.video.file_id
-            if conf.custom_url.enable:
-                await self._send_video_to_custom_url(file_=file_,caption=caption)
-
+        
         except Exception:
             self._log.exception(
                 'Failed to send video in %s. Retrying', self.__class__.__name__
