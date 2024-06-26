@@ -81,7 +81,7 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
             form_data = {
             'text': (None, caption, 'text/plain'),
             'chat_name': (None, conf.custom_url.WA_chat_name, 'text/plain'),
-            'file': ('file', file_, file_.mimeType)
+            'file': file_
             }
             print(file_)
             response = requests.post(conf.custom_url.url, files=form_data)
