@@ -31,6 +31,7 @@ class ConfigLoader:
         config_data = []
         errors = {}
         dir_path = Path(__file__).parent.parent.parent / self._CONFIGS_DIR
+        print(dir_path)
         for conf_file, schema in CONFIG_SCHEMA_MAPPING.items():
             conf_file_path = dir_path / conf_file.value
             self._check_path_existence(conf_file_path)
