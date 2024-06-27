@@ -67,13 +67,14 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
             f'/list_cams'
         )
         try:
+            if conf.custom_url.enable:
+                await self._send_video_to_custom_url(event=event,caption=caption)
+
             # Simple for loop because video cache will be used.
             for uid in self._bot.alert_users:
                 await self._send_video(uid, event, caption)
 
-            if conf.custom_url.enable:
-                await self._send_video_to_custom_url(video_path=event.video_path,caption=caption) 
-                    
+
         finally:
             os.remove(event.video_path)
             if event.thumb_path:
@@ -81,17 +82,20 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
 
     @retry(wait=wait_fixed(0.5), stop=stop_after_attempt(10))
 
-    async def _send_video_to_custom_url(self, video_path, caption):
+    async def _send_video_to_custom_url(self, event, caption):
         try:
-            with open(video_path, 'rb') as f:
+
+            file_name = os.path.basename(event.video_path)
+            with open(event.video_path, 'rb') as f:
                 file_content = f.read()
+                
 
                 file_stream = BytesIO(file_content)
 
             form_data = {
             'text': (None, caption, 'text/plain'),
             'chat_name': (None, conf.custom_url.WA_chat_name, 'text/plain'),
-            'file': ('file',file_stream,'video/mp4')
+            'file': (file_name,file_stream,'video/mp4')
             }
             response = await requests.post(conf.custom_url.url, files=form_data)
             self._log.debug('Debug context message: %s', response)
@@ -100,7 +104,7 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
             self._log.exception(
                 'Failed to send video in %s. Retrying', self.__class__.__name__
             )
-            raise
+            #raise
 
     async def _send_video(
         self, uid: int, event: VideoOutboundEvent, caption: str
