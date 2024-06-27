@@ -22,13 +22,13 @@ class BotLauncher:
 
     async def _start_bot(self) -> None:
         """Start telegram bot and related processes."""
-        await self._bot.start()
+        #await self._bot.start()
 
-        bot_name = (await self._bot.get_me()).first_name
+        bot_name ='Disabled Demon' #(await self._bot.get_me()).first_name
         self._log.info('Starting "%s" bot version %s', bot_name, __version__)
 
         self._bot.start_tasks()
         await self._bot.send_startup_message()
 
-        self._log.info('Telegram bot "%s" has started', bot_name)
-        await self._bot.run_forever()
+     #   self._log.info('Telegram bot "%s" has started', bot_name)
+     #   await self._bot.run_forever()

@@ -9,7 +9,7 @@ services:
     volumes:
       # The first path is a real local storage path e.g., "D:\Videos" in Windows. Change to your preferred one.
       - "/data/dvr:/data/dvr"
-      - "./configs:/app/configs"
+      - "./configs/cam_1:/app/configs"
     restart: unless-stopped
     depends_on:
       - hikvision-srs-server
@@ -26,7 +26,7 @@ services:
     volumes:
       # The first path is a real local storage path e.g., "D:\Videos" in Windows. Change to your preferred one.
       - "/data/dvr:/data/dvr"
-      - "./configs:/app/configs"
+      - "./configs/cam_4:/app/configs"
     restart: unless-stopped
     depends_on:
       - hikvision-srs-server
