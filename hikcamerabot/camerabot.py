@@ -81,8 +81,8 @@ class CameraBot(Client):
     async def send_startup_message(self) -> None:
         """Send welcome message to defined telegram ids after bot launch."""
         text = (
-            f'Disabled Demon bot started '
-            f'No available commands'
+            f'{(await self.get_me()).first_name} bot started, see /help for '
+            f'available commands'
         )
         for user_id in self.startup_message_users:
             telegram_id_type = 'group_id' if user_id < 0 else 'user_id'
