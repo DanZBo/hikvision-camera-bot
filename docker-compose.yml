@@ -1,6 +1,23 @@
 services:
-  hikvision-camera-bot:
-    container_name: "hikvision_camera_bot"
+  hikvision-camera-bot_cam1:
+    container_name: "hikvision_camera_bot_cam1"
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # The first path is a real local storage path e.g., "D:\Videos" in Windows. Change to your preferred one.
+      - "/data/dvr:/data/dvr"
+      - "./configs:/app/configs"
+    restart: unless-stopped
+    depends_on:
+      - hikvision-srs-server
+    command: >
+      bash -c "python ./bot.py"
+
+  hikvision-camera-bot_cam4:
+    container_name: "hikvision_camera_bot_cam4"
     env_file:
       - .env
     build:
