@@ -70,8 +70,10 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
             # Simple for loop because video cache will be used.
             for uid in self._bot.alert_users:
                 await self._send_video(uid, event, caption)
+
             if conf.custom_url.enable:
-                await self._send_video_to_custom_url(video_path=event.video_path,caption=caption)     
+                await self._send_video_to_custom_url(video_path=event.video_path,caption=caption) 
+                    
         finally:
             os.remove(event.video_path)
             if event.thumb_path:
