@@ -70,6 +70,8 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
             # Simple for loop because video cache will be used.
             for uid in self._bot.alert_users:
                 await self._send_video(uid, event, caption)
+            if conf.custom_url.enable:
+                await self._send_video_to_custom_url(video_path=event.video_path,caption=caption)     
         finally:
             os.remove(event.video_path)
             if event.thumb_path:
@@ -120,10 +122,7 @@ class ResultAlertVideoHandler(AbstractResultEventHandler):
             )
             self._log.debug('Debug context message: %s', message)
             if message and message.video and not is_cached:
-                self._video_file_cache[event.video_path] = message.video.file_id
-
-            if conf.custom_url.enable:
-                await self._send_video_to_custom_url(video_path=event.video_path,caption=caption)    
+                self._video_file_cache[event.video_path] = message.video.file_id   
         
         except Exception:
             self._log.exception(
